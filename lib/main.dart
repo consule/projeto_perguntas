@@ -1,45 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_perguntas/resposta.dart';
+import './questao.dart';
+
 main() => runApp(PerguntaApp());
 
-class PerguntaApp extends StatelessWidget {
-  const PerguntaApp({super.key});
-
-  void responder() {
-      print('Pergunta respondida');
+class _PerguntaAppState extends State<PerguntaApp> {
+  // Gerenciador do estado
+  int _perguntaSelecionada = 0;
+  void _responder() {
+    setState(() {
+      _perguntaSelecionada++;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     final perguntas = [
-      'Qual é a sua cor favorita?',
-      'Qual é o seu animal favorito?'
+      {
+        'texto': 'Qual é a sua cor favorita?',
+        'respostas': ['Verde', 'Amarelo', 'Azul', 'Branco', 'Vermelho']
+      },
+      {
+        'texto': 'Qual é o seu animal favorito?',
+        'respostas': ['Galinha', 'Codorna', 'Capivara', 'Elefante']
+      },
+      {
+        'texto': 'Qual seu estilo de música preferido?',
+        'respostas': ['Pagode', 'Samba', 'Rock', 'Funk (nem fodendo que é esse!)']
+      }
     ];
-    
+
+    List<Widget> respostas = [];
+
+    for (String textoResposta in perguntas[_perguntaSelecionada]['respostas'] as List) {
+      respostas.add(Resposta(textoResposta, _responder));
+    }
+
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Perguntas do tio Cri'),
-        ),
-        body: Column(
-          children: <Widget>[
-            Text(perguntas.elementAt(1)),
-             ElevatedButton(
-              onPressed: responder, 
-              child: const Text('Resposta 1')
-            ),
-             ElevatedButton(
-              onPressed: responder, 
-              child: const Text('Resposta 2')
-            ),
-             ElevatedButton(
-              onPressed: responder, 
-              child: const Text('Resposta 3')
-            ),
-          ],
-        )
-      ),
+          appBar: AppBar(
+            title: const Text('Perguntas do tio Cri 2'),
+          ),
+          body: Column(
+            children: <Widget>[
+              Questao(perguntas[_perguntaSelecionada]['texto'].toString()),
+              ...respostas,
+            ],
+          )),
     );
   }
 }
 
+class PerguntaApp extends StatefulWidget {
+  _PerguntaAppState createState() {
+    return _PerguntaAppState();
+  }
+}
